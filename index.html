@@ -21,7 +21,7 @@ html, body {
   width: 100%;
   overflow-x:hidden; 
   scroll-behavior:smooth;
-  -webkit-tap-highlight-color: transparent; /* Убирает синий квадрат при тапе на телефоне */
+  -webkit-tap-highlight-color: transparent; 
 }
 
 body{
@@ -681,7 +681,7 @@ footer span{color:var(--accent); text-shadow: 0 0 10px var(--accent-glow);}
 }
 .reveal.visible{opacity:1; transform:none;}
 
-/* ================= МОБИЛЬНАЯ АДАПТАЦИЯ ================= */
+/* ================= МОБИЛЬНАЯ АДАПТАЦИЯ (ЛАГИ И МИНИМАЛИЗМ) ================= */
 @media (max-width: 900px) {
   .gallery { grid-template-columns: repeat(2, 1fr); }
   .text-box { padding: 30px 20px; }
@@ -690,9 +690,36 @@ footer span{color:var(--accent); text-shadow: 0 0 10px var(--accent-glow);}
   .ph .tape-2 { bottom: -10px; right: -15px; }
 }
 
+@media (max-width: 768px) {
+  /* === СНИЖАЕМ НАГРУЗКУ НА ТЕЛЕФОНАХ === */
+  
+  /* Убираем всех летающих, ползающих и крутящихся */
+  .ghost, .flying-ghost, .bat, .spider-bg, .pentagram, .boot-prints {
+    display: none !important; 
+  }
+
+  /* Отключаем анимацию шума (зерна) — она сильно грузит процессор */
+  .grain {
+    animation: none !important;
+    opacity: 0.03; /* Делаем ее почти незаметной */
+  }
+
+  /* Убираем тяжелое размытие фона (blur) в карточках */
+  .text-box, .poll-box, .warning, .lightbox {
+    backdrop-filter: none !important;
+    background-color: rgba(8, 8, 10, 0.95) !important; /* Сплошной темный фон */
+  }
+  
+  /* Убираем размытие у тумана */
+  .fog-layer {
+    filter: none !important;
+    opacity: 0.5;
+  }
+}
+
 @media (max-width: 640px) {
   .gallery { grid-template-columns: 1fr; }
-  .moon { width: 100px; height: 100px; right: 5%; }
+  .moon { width: 120px; height: 120px; right: 5%; top: 3%; }
   
   /* Уменьшаем боковые отступы для мобилок */
   .wrap { padding: 0 16px; }
@@ -723,7 +750,6 @@ footer span{color:var(--accent); text-shadow: 0 0 10px var(--accent-glow);}
 
 @media (prefers-reduced-motion: reduce){
   .reveal{opacity:1; transform:none; transition:none;}
-  .ghost, .bat, .spider-bg, .flying-ghost, .pentagram {animation:none !important;}
 }
 </style>
 </head>
@@ -865,7 +891,7 @@ footer span{color:var(--accent); text-shadow: 0 0 10px var(--accent-glow);}
       <h2>То, что осталось в лесу</h2>
       <p>У него остались жена и дочь. Милиция перерыла всё: никаких долгов, ссор или предсмертных записок. Абсолютно благополучный человек.</p>
       <p>Но что-то в том лесу за четыре месяца забрало его разум. Что-то, что наблюдало за ним по ночам из крон деревьев, пока не заставило прийти и сделать этот шаг.</p>
-      <p>Бабушка говорила, что после этого случая местные вообще перестали ходить мимо ГЭС после заката. А старики в Крёмно до сих пор верят: то, что жило в лесу и звало Женю, никуда не ушло.</p>
+      <p>Бабушка говорила, что после этого случая местные вообще перестали ходить мимо ГЭС после заката. А старики в Кремено до сих пор верят: то, что жило в лесу и звало Женю, никуда не ушло.</p>
     </div>
 
     <figure class="photo-block reveal">
@@ -945,7 +971,7 @@ footer span{color:var(--accent); text-shadow: 0 0 10px var(--accent-glow);}
 </main>
 
 <footer>
-  Тайна заброшенной ГЭС <span>·</span> легенда деревни Крёмно
+  Тайна заброшенной ГЭС <span>·</span> легенда деревни Кремено
 </footer>
 
 <script>
