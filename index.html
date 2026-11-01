@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Тайна заброшенной ГЭС</title>
 <style>
 :root{
@@ -15,25 +15,43 @@
 }
 
 *{box-sizing:border-box;}
-html{scroll-behavior:smooth;}
+html, body {
+  margin:0;
+  padding:0;
+  width: 100%;
+  overflow-x:hidden; 
+  scroll-behavior:smooth;
+  -webkit-tap-highlight-color: transparent; /* Убирает синий квадрат при тапе на телефоне */
+}
 
 body{
-  margin:0;
   background:var(--bg);
   color:var(--ink);
   font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
   font-size:17px;
   line-height:1.85;
   -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
   position:relative; 
+}
+
+/* Блокировка скролла при открытом фото */
+body.no-scroll {
+  overflow: hidden;
+  height: 100vh;
 }
 
 /* ================= ХОРРОР ФОН ================= */
 
+.bg-wrapper {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  overflow: hidden;
+  z-index: -10;
+  pointer-events: none;
+}
+
 .sky {
   position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-  z-index: -5;
   background-image: 
     radial-gradient(1px 1px at 10% 20%, #fff, transparent),
     radial-gradient(1px 1px at 30% 10%, #fff, transparent),
@@ -51,14 +69,11 @@ body{
   border-radius: 50%;
   background: radial-gradient(circle at 30% 30%, #ffffff, #b0c4de, #6a7b8f);
   box-shadow: 0 0 80px 20px rgba(176, 196, 222, 0.3), inset -15px -15px 30px rgba(0,0,0,0.5);
-  z-index: -4;
   opacity: 0.8;
 }
 
 .forest-edge {
   position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-  z-index: -4;
-  pointer-events: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 1000' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L100,0 L100,1000 L0,1000 Z' fill='none'/%3E%3Cpath d='M0,0 L20,0 L15,50 L30,60 L10,150 L25,170 L5,250 L20,270 L10,400 L25,450 L5,600 L15,650 L5,800 L20,850 L0,1000 Z' fill='%23020304'/%3E%3C/svg%3E"),
                     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 1000' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L20,0 L15,50 L30,60 L10,150 L25,170 L5,250 L20,270 L10,400 L25,450 L5,600 L15,650 L5,800 L20,850 L0,1000 Z' fill='%23020304'/%3E%3C/svg%3E");
   background-position: left top, right top;
@@ -69,16 +84,13 @@ body{
 
 .graveyard {
   position: absolute; bottom: 0; left: 0; width: 100%; height: 350px;
-  z-index: -3;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,200 L40,200 L40,150 L50,150 L50,140 L45,140 L60,120 L75,140 L70,140 L70,150 L80,150 L80,200 L120,200 L120,180 Q140,150 160,180 L160,200 L200,200 L200,160 L210,160 L210,110 L200,110 L220,90 L240,110 L230,110 L230,160 L240,160 L240,200 L280,200 Q300,150 330,200 L330,220 L370,220 L370,180 L360,180 L380,160 L400,180 L390,180 L390,220 L430,220 L430,170 Q460,120 490,170 L490,220 L550,220 L550,190 L560,190 L560,130 L545,130 L565,110 L585,130 L570,130 L570,190 L580,190 L580,220 L620,220 Q650,150 680,220 L680,240 L720,240 L720,200 L730,200 L730,150 L720,150 L740,130 L760,150 L750,150 L750,200 L760,200 L760,240 L800,240 Q820,190 850,240 L850,250 L900,250 L900,210 L890,210 L910,190 L930,210 L920,210 L920,250 L960,250 Q990,180 1020,250 L1020,260 L1080,260 L1080,220 L1090,220 L1090,180 L1080,180 L1100,160 L1120,180 L1110,180 L1110,220 L1120,220 L1120,260 L1160,260 Q1180,220 1200,260 L1200,300 Z' fill='%23020304'/%3E%3C/svg%3E");
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
 
 .boot-prints {
-  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-  z-index: -3;
-  pointer-events: none;
+  position: absolute; top: -20%; left: -20%; width: 150%; height: 150%;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 60'%3E%3Cpath d='M15,5 C20,5 25,10 25,20 C25,30 20,40 20,45 C20,55 25,55 25,60 L5,60 C5,55 10,55 10,45 C10,40 5,30 5,20 C5,10 10,5 15,5 Z' fill='none' stroke='%23ffffff' stroke-width='2' opacity='0.04'/%3E%3C/svg%3E");
   background-size: 40px 80px;
   background-repeat: repeat-y;
@@ -87,7 +99,6 @@ body{
 
 .pentagram {
   position: absolute;
-  z-index: -2;
   width: 150px; height: 150px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='none' stroke='%23ff2222' stroke-width='1.5' opacity='0.2'/%3E%3Cpolygon points='50,3 61.8,38.2 98.5,38.2 69.1,59.9 79.4,95.1 50,73.2 20.6,95.1 30.9,59.9 1.5,38.2 38.2,38.2' fill='none' stroke='%23ff2222' stroke-width='1.5' opacity='0.2'/%3E%3C/svg%3E");
   background-size: contain;
@@ -98,37 +109,26 @@ body{
 .pent-1 { top: 15%; left: 5%; }
 .pent-2 { top: 55%; right: 8%; width: 200px; height: 200px; animation-duration: 60s; }
 
-@keyframes spinPentagram {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-@keyframes pulsePentagram {
-  0% { opacity: 0.05; filter: drop-shadow(0 0 5px #ff2222); }
-  100% { opacity: 0.3; filter: drop-shadow(0 0 20px #ff2222); }
-}
+@keyframes spinPentagram { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes pulsePentagram { 0% { opacity: 0.05; filter: drop-shadow(0 0 5px #ff2222); } 100% { opacity: 0.3; filter: drop-shadow(0 0 20px #ff2222); } }
 
 .fog-layer {
   position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-  z-index: -2;
-  pointer-events: none;
-  background: 
-    radial-gradient(ellipse at 50% 20%, rgba(100, 120, 140, 0.15) 0%, transparent 60%),
-    radial-gradient(ellipse at 20% 80%, rgba(100, 120, 140, 0.1) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 60%, rgba(100, 120, 140, 0.1) 0%, transparent 50%);
+  background: radial-gradient(ellipse at 50% 20%, rgba(100, 120, 140, 0.15) 0%, transparent 60%),
+              radial-gradient(ellipse at 20% 80%, rgba(100, 120, 140, 0.1) 0%, transparent 50%),
+              radial-gradient(ellipse at 80% 60%, rgba(100, 120, 140, 0.1) 0%, transparent 50%);
   filter: blur(20px);
 }
 
+.flying-ghost, .ghost, .bat, .spider-bg { position: absolute; background-size: contain; background-repeat: no-repeat; }
+
 .flying-ghost {
-  position: absolute; z-index: -1; pointer-events: none;
   width: 100px; height: 130px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120'%3E%3Cpath d='M50,10 C30,10 20,30 20,50 L20,100 L25,95 L30,100 L35,95 L40,100 L45,95 L50,100 L55,95 L60,100 L65,95 L70,100 L75,95 L80,100 L80,50 C80,30 70,10 50,10 Z' fill='%23ffffff' opacity='0.15'/%3E%3Cellipse cx='40' cy='40' rx='4' ry='7' fill='%23000000' opacity='0.5'/%3E%3Cellipse cx='60' cy='40' rx='4' ry='7' fill='%23000000' opacity='0.5'/%3E%3C/svg%3E");
-  background-size: contain;
-  background-repeat: no-repeat;
   filter: drop-shadow(0 0 15px rgba(255,255,255,0.4));
   animation: flyAcross 20s linear infinite;
   opacity: 0;
 }
-
 .fly-1 { top: 20%; animation-duration: 25s; animation-delay: 2s; }
 .fly-2 { top: 65%; animation-duration: 35s; animation-delay: 10s; transform: scale(0.7); }
 .fly-3 { top: 40%; animation-duration: 22s; animation-delay: 18s; transform: scale(1.2); }
@@ -142,11 +142,8 @@ body{
 }
 
 .ghost {
-  position: absolute; z-index: -1; pointer-events: none;
   width: 120px; height: 150px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120'%3E%3Cpath d='M50,10 C30,10 20,30 20,50 L20,100 L25,95 L30,100 L35,95 L40,100 L45,95 L50,100 L55,95 L60,100 L65,95 L70,100 L75,95 L80,100 L80,50 C80,30 70,10 50,10 Z' fill='%23ffffff' opacity='0.15'/%3E%3Cellipse cx='40' cy='40' rx='4' ry='7' fill='%23000000' opacity='0.5'/%3E%3Cellipse cx='60' cy='40' rx='4' ry='7' fill='%23000000' opacity='0.5'/%3E%3C/svg%3E");
-  background-size: contain;
-  background-repeat: no-repeat;
   filter: drop-shadow(0 0 15px rgba(255,255,255,0.4));
   animation: floatGhost 12s infinite ease-in-out alternate;
   opacity: 0;
@@ -162,11 +159,8 @@ body{
 }
 
 .bat {
-  position: absolute; z-index: -1; pointer-events: none;
   width: 50px; height: 30px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 60'%3E%3Cpath d='M50,30 Q60,10 80,20 Q90,30 100,10 Q80,40 60,40 L50,50 L40,40 Q20,40 0,10 Q10,30 20,20 Q40,10 50,30 Z' fill='%23000000'/%3E%3C/svg%3E");
-  background-size: contain;
-  background-repeat: no-repeat;
   animation: flyBat linear infinite;
 }
 .bat-1 { top: 10%; animation-duration: 25s; animation-delay: 0s; }
@@ -183,14 +177,10 @@ body{
 }
 
 .spider-bg {
-  position: absolute; z-index: -1; pointer-events: none;
   width: 40px; height: 40px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cellipse cx='50' cy='60' rx='15' ry='20' fill='%23000000'/%3E%3Cellipse cx='50' cy='40' rx='10' ry='10' fill='%23000000'/%3E%3Cpath d='M45,35 L20,15 M42,45 L10,40 M42,55 L10,70 M42,65 L20,90 M55,35 L80,15 M58,45 L90,40 M58,55 L90,70 M58,65 L80,90' stroke='%23000000' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-size: contain;
-  background-repeat: no-repeat;
   animation: crawlSpider 25s infinite linear;
 }
-
 .spider-1 { top: 20%; left: -5%; animation-duration: 30s; }
 .spider-2 { top: 50%; right: -5%; animation-duration: 40s; animation-direction: reverse; }
 .spider-3 { top: 80%; left: -5%; animation-duration: 25s; animation-delay: 5s; transform: scale(0.6); }
@@ -389,10 +379,11 @@ figure{margin:0;}
   background-repeat:no-repeat;
   color:var(--ink-dim);
   text-align:center;
-  transition:border-color .6s ease, transform .8s ease, filter .6s ease;
+  transition:transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), filter 0.6s ease;
   filter:grayscale(.4) contrast(1.1) brightness(.8);
   cursor: zoom-in; 
   z-index: 5;
+  border-radius: 2px;
 }
 .ph::after{
   content:"";
@@ -404,6 +395,10 @@ figure{margin:0;}
 .ph:hover{
   filter:grayscale(0) contrast(1.1) brightness(1);
   transform:scale(1.02);
+}
+/* Эффект вдавливания при тапе на телефоне */
+.ph:active {
+  transform: scale(0.97);
 }
 
 .ph::before, .ph .tape-2 {
@@ -418,6 +413,7 @@ figure{margin:0;}
   clip-path: polygon(2% 5%, 98% 0%, 100% 95%, 0% 100%);
   border-left: 1px solid rgba(255,255,255,0.1);
   border-right: 1px solid rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
 }
 .ph::before {
   top: -15px;
@@ -473,18 +469,6 @@ figure{margin:0;}
 .gallery .ph::before, 
 .gallery .ph .tape-2 {
   display: none; 
-}
-
-@media (max-width:900px){
-  .gallery{grid-template-columns:repeat(2, 1fr);}
-  .text-box { padding: 30px 20px; }
-  .ph::before, .ph .tape-2 { width: 60px; height: 25px; }
-  .ph::before { top: -10px; left: -15px; }
-  .ph .tape-2 { bottom: -10px; right: -15px; }
-}
-@media (max-width:640px){
-  .gallery{grid-template-columns:1fr;}
-  .moon { width: 100px; height: 100px; right: 5%; }
 }
 
 figcaption{
@@ -566,6 +550,8 @@ figcaption{
   font-weight: bold;
   position: relative;
   overflow: hidden;
+  flex: 1;
+  min-width: 120px;
 }
 .poll-btn::before {
   content: '';
@@ -645,6 +631,7 @@ footer{
 }
 footer span{color:var(--accent); text-shadow: 0 0 10px var(--accent-glow);}
 
+/* ================= ЛАЙТБОКС ================= */
 .lightbox {
   position: fixed;
   inset: 0;
@@ -655,15 +642,35 @@ footer span{color:var(--accent); text-shadow: 0 0 10px var(--accent-glow);}
   z-index: 10000;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.4s ease, transform 0.4s ease;
-  transform: scale(0.95);
-  cursor: zoom-out;
+  transition: opacity 0.3s ease;
   backdrop-filter: blur(10px);
+  touch-action: none; 
 }
 .lightbox.active {
   opacity: 1;
   pointer-events: all;
-  transform: scale(1);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 48px;
+  height: 48px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 32px;
+  line-height: 44px;
+  text-align: center;
+  cursor: pointer;
+  z-index: 10001;
+  transition: background 0.3s ease;
+  font-family: Arial, sans-serif;
+}
+.lightbox-close:hover {
+  background: var(--accent);
 }
 
 .reveal{
@@ -674,6 +681,46 @@ footer span{color:var(--accent); text-shadow: 0 0 10px var(--accent-glow);}
 }
 .reveal.visible{opacity:1; transform:none;}
 
+/* ================= МОБИЛЬНАЯ АДАПТАЦИЯ ================= */
+@media (max-width: 900px) {
+  .gallery { grid-template-columns: repeat(2, 1fr); }
+  .text-box { padding: 30px 20px; }
+  .ph::before, .ph .tape-2 { width: 60px; height: 25px; }
+  .ph::before { top: -10px; left: -15px; }
+  .ph .tape-2 { bottom: -10px; right: -15px; }
+}
+
+@media (max-width: 640px) {
+  .gallery { grid-template-columns: 1fr; }
+  .moon { width: 100px; height: 100px; right: 5%; }
+  
+  /* Уменьшаем боковые отступы для мобилок */
+  .wrap { padding: 0 16px; }
+  
+  /* Делаем блоки чуть плотнее */
+  .section { padding: 20px 0; }
+  .text-box { padding: 24px 16px; margin-bottom: 40px; }
+  
+  /* Низ сайта: опрос и кнопки */
+  .poll-box { padding: 30px 15px; }
+  .poll-box h3 { font-size: 1.1rem; margin-bottom: 20px; }
+  .poll-options { gap: 15px; flex-direction: column; }
+  .poll-btn { width: 100%; padding: 16px 20px; }
+  
+  /* Предупреждение внизу */
+  .warning { padding: 40px 20px; margin-top: 40px; }
+  
+  /* Красиво выравниваем паука и подвал */
+  .easter-egg { padding: 10px 10px 30px; }
+  .spider-icon { width: 60px; height: 60px; margin-bottom: 15px; }
+  .yt-link { font-size: 0.8rem; letter-spacing: 0.2em; }
+  
+  footer { padding: 15px 16px 30px; font-size: 0.65rem; letter-spacing: 0.2em; }
+  
+  /* Кладбище внизу делаем чуть ниже, чтобы не перекрывало текст */
+  .graveyard { height: 200px; }
+}
+
 @media (prefers-reduced-motion: reduce){
   .reveal{opacity:1; transform:none; transition:none;}
   .ghost, .bat, .spider-bg, .flying-ghost, .pentagram {animation:none !important;}
@@ -683,39 +730,44 @@ footer span{color:var(--accent); text-shadow: 0 0 10px var(--accent-glow);}
 <body>
 
 <!-- ================= ХОРРОР ФОН ================= -->
-<div class="sky"></div>
-<div class="moon"></div>
-<div class="forest-edge"></div>
-<div class="boot-prints"></div>
+<div class="bg-wrapper">
+  <div class="sky"></div>
+  <div class="moon"></div>
+  <div class="forest-edge"></div>
+  <div class="boot-prints"></div>
 
-<div class="pentagram pent-1"></div>
-<div class="pentagram pent-2"></div>
+  <div class="pentagram pent-1"></div>
+  <div class="pentagram pent-2"></div>
 
-<div class="flying-ghost fly-1"></div>
-<div class="flying-ghost fly-2"></div>
-<div class="flying-ghost fly-3"></div>
+  <div class="flying-ghost fly-1"></div>
+  <div class="flying-ghost fly-2"></div>
+  <div class="flying-ghost fly-3"></div>
 
-<div class="ghost ghost-1"></div>
-<div class="ghost ghost-2"></div>
-<div class="ghost ghost-3"></div>
+  <div class="ghost ghost-1"></div>
+  <div class="ghost ghost-2"></div>
+  <div class="ghost ghost-3"></div>
 
-<div class="bat bat-1"></div>
-<div class="bat bat-2"></div>
-<div class="bat bat-3"></div>
-<div class="bat bat-4"></div>
+  <div class="bat bat-1"></div>
+  <div class="bat bat-2"></div>
+  <div class="bat bat-3"></div>
+  <div class="bat bat-4"></div>
 
-<div class="spider-bg spider-1"></div>
-<div class="spider-bg spider-2"></div>
-<div class="spider-bg spider-3"></div>
-<div class="spider-bg spider-4"></div>
+  <div class="spider-bg spider-1"></div>
+  <div class="spider-bg spider-2"></div>
+  <div class="spider-bg spider-3"></div>
+  <div class="spider-bg spider-4"></div>
 
-<div class="fog-layer"></div>
-<div class="graveyard"></div>
+  <div class="fog-layer"></div>
+  <div class="graveyard"></div>
+</div>
 
 <div class="grain"></div>
 <div class="vignette"></div>
 
-<div class="lightbox" id="lightbox"></div>
+<!-- ЛАЙТБОКС -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-close" id="lightbox-close">&times;</div>
+</div>
 
 <header class="hero">
   <div class="hero-inner">
@@ -857,7 +909,6 @@ footer span{color:var(--accent); text-shadow: 0 0 10px var(--accent-glow);}
   </div>
 </section>
 
-<!-- ================= ОПРОС (ИСПРАВЛЕНО) ================= -->
 <section class="poll-section">
   <div class="wrap">
     <div class="poll-box reveal">
@@ -873,7 +924,6 @@ footer span{color:var(--accent); text-shadow: 0 0 10px var(--accent-glow);}
   </div>
 </section>
 
-<!-- ================= ССЫЛКА НА КАНАЛ ================= -->
 <div class="easter-egg reveal">
   <a href="https://www.youtube.com/@Arana.officialakk" target="_blank" rel="noopener noreferrer" class="yt-link">
     
@@ -921,6 +971,7 @@ footer span{color:var(--accent); text-shadow: 0 0 10px var(--accent-glow);}
 document.addEventListener('DOMContentLoaded', () => {
   const photos = document.querySelectorAll('.ph.filled');
   const lightbox = document.getElementById('lightbox');
+  const closeBtn = document.getElementById('lightbox-close');
 
   photos.forEach(photo => {
     photo.addEventListener('click', () => {
@@ -928,17 +979,25 @@ document.addEventListener('DOMContentLoaded', () => {
       if(bgImage) {
         lightbox.style.backgroundImage = bgImage;
         lightbox.classList.add('active');
+        document.body.classList.add('no-scroll'); 
       }
     });
   });
 
-  lightbox.addEventListener('click', () => {
+  const closeLightbox = () => {
     lightbox.classList.remove('active');
+    document.body.classList.remove('no-scroll');
+  };
+
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox || e.target === closeBtn) {
+      closeLightbox();
+    }
   });
   
   document.addEventListener('keydown', (e) => {
     if(e.key === 'Escape') {
-      lightbox.classList.remove('active');
+      closeLightbox();
     }
   });
 });
