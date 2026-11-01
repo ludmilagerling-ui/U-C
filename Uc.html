@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Тайна заброшенной ГЭС</title>
+<style>
+:root{
+  --bg:#050608;
+  --ink:#c2bfb5;
+  --ink-dim:#8a877e;
+  --accent:#ff2222; 
+  --accent-glow:rgba(255,34,34,.7);
+  --accent-soft:rgba(255,34,34,.3);
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
+  font-size:17px;
+  line-height:1.85;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  position:relative; 
+}
+
+/* ================= ХОРРОР ФОН ================= */
+
+.sky {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  z-index: -5;
+  background-image: 
+    radial-gradient(1px 1px at 10% 20%, #fff, transparent),
+    radial-gradient(1px 1px at 30% 10%, #fff, transparent),
+    radial-gradient(2px 2px at 50% 40%, #fff, transparent),
+    radial-gradient(1px 1px at 70% 30%, #fff, transparent),
+    radial-gradient(1px 1px at 90% 15%, #fff, transparent),
+    radial-gradient(1px 1px at 20% 80%, #fff, transparent),
+    radial-gradient(1px 1px at 80% 70%, #fff, transparent);
+  background-color: #0a0e17;
+}
+
+.moon {
+  position: absolute; top: 5%; right: 10%;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #ffffff, #b0c4de, #6a7b8f);
+  box-shadow: 0 0 80px 20px rgba(176, 196, 222, 0.3), inset -15px -15px 30px rgba(0,0,0,0.5);
+  z-index: -4;
+  opacity: 0.8;
+}
+
+.forest-edge {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  z-index: -4;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 1000' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L100,0 L100,1000 L0,1000 Z' fill='none'/%3E%3Cpath d='M0,0 L20,0 L15,50 L30,60 L10,150 L25,170 L5,250 L20,270 L10,400 L25,450 L5,600 L15,650 L5,800 L20,850 L0,1000 Z' fill='%23020304'/%3E%3C/svg%3E"),
+                    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 1000' preserveAspectRatio='none'%3E%3Cpath d='M0,0 L20,0 L15,50 L30,60 L10,150 L25,170 L5,250 L20,270 L10,400 L25,450 L5,600 L15,650 L5,800 L20,850 L0,1000 Z' fill='%23020304'/%3E%3C/svg%3E");
+  background-position: left top, right top;
+  background-size: 15% 100%, 15% 100%;
+  background-repeat: no-repeat;
+  opacity: 0.9;
+}
+
+.graveyard {
+  position: absolute; bottom: 0; left: 0; width: 100%; height: 350px;
+  z-index: -3;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300' preserveAspectRatio='none'%3E%3Cpath d='M0,300 L0,200 L40,200 L40,150 L50,150 L50,140 L45,140 L60,120 L75,140 L70,140 L70,150 L80,150 L80,200 L120,200 L120,180 Q140,150 160,180 L160,200 L200,200 L200,160 L210,160 L210,110 L200,110 L220,90 L240,110 L230,110 L230,160 L240,160 L240,200 L280,200 Q300,150 330,200 L330,220 L370,220 L370,180 L360,180 L380,160 L400,180 L390,180 L390,220 L430,220 L430,170 Q460,120 490,170 L490,220 L550,220 L550,190 L560,190 L560,130 L545,130 L565,110 L585,130 L570,130 L570,190 L580,190 L580,220 L620,220 Q650,150 680,220 L680,240 L720,240 L720,200 L730,200 L730,150 L720,150 L740,130 L760,150 L750,150 L750,200 L760,200 L760,240 L800,240 Q820,190 850,240 L850,250 L900,250 L900,210 L890,210 L910,190 L930,210 L920,210 L920,250 L960,250 Q990,180 1020,250 L1020,260 L1080,260 L1080,220 L1090,220 L1090,180 L1080,180 L1100,160 L1120,180 L1110,180 L1110,220 L1120,220 L1120,260 L1160,260 Q1180,220 1200,260 L1200,300 Z' fill='%23020304'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.boot-prints {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  z-index: -3;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 60'%3E%3Cpath d='M15,5 C20,5 25,10 25,20 C25,30 20,40 20,45 C20,55 25,55 25,60 L5,60 C5,55 10,55 10,45 C10,40 5,30 5,20 C5,10 10,5 15,5 Z' fill='none' stroke='%23ffffff' stroke-width='2' opacity='0.04'/%3E%3C/svg%3E");
+  background-size: 40px 80px;
+  background-repeat: repeat-y;
+  transform: rotate(-15deg);
+}
+
+.pentagram {
+  position: absolute;
+  z-index: -2;
+  width: 150px; height: 150px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='none' stroke='%23ff2222' stroke-width='1.5' opacity='0.2'/%3E%3Cpolygon points='50,3 61.8,38.2 98.5,38.2 69.1,59.9 79.4,95.1 50,73.2 20.6,95.1 30.9,59.9 1.5,38.2 38.2,38.2' fill='none' stroke='%23ff2222' stroke-width='1.5' opacity='0.2'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  animation: spinPentagram 40s linear infinite, pulsePentagram 4s ease-in-out infinite alternate;
+  opacity: 0.15;
+}
+.pent-1 { top: 15%; left: 5%; }
+.pent-2 { top: 55%; right: 8%; width: 200px; height: 200px; animation-duration: 60s; }
+
+@keyframes spinPentagram {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes pulsePentagram {
+  0% { opacity: 0.05; filter: drop-shadow(0 0 5px #ff2222); }
+  100% { opacity: 0.3; filter: drop-shadow(0 0 20px #ff2222); }
+}
+
+.fog-layer {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  z-index: -2;
+  pointer-events: none;
+  background: 
+    radial-gradient(ellipse at 50% 20%, rgba(100, 120, 140, 0.15) 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 80%, rgba(100, 120, 140, 0.1) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 60%, rgba(100, 120, 140, 0.1) 0%, transparent 50%);
+  filter: blur(20px);
+}
+
+.flying-ghost {
+  position: absolute; z-index: -1; pointer-events: none;
+  width: 100px; height: 130px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120'%3E%3Cpath d='M50,10 C30,10 20,30 20,50 L20,100 L25,95 L30,100 L35,95 L40,100 L45,95 L50,100 L55,95 L60,100 L65,95 L70,100 L75,95 L80,100 L80,50 C80,30 70,10 50,10 Z' fill='%23ffffff' opacity='0.15'/%3E%3Cellipse cx='40' cy='40' rx='4' ry='7' fill='%23000000' opacity='0.5'/%3E%3Cellipse cx='60' cy='40' rx='4' ry='7' fill='%23000000' opacity='0.5'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 0 15px rgba(255,255,255,0.4));
+  animation: flyAcross 20s linear infinite;
+  opacity: 0;
+}
+
+.fly-1 { top: 20%; animation-duration: 25s; animation-delay: 2s; }
+.fly-2 { top: 65%; animation-duration: 35s; animation-delay: 10s; transform: scale(0.7); }
+.fly-3 { top: 40%; animation-duration: 22s; animation-delay: 18s; transform: scale(1.2); }
+
+@keyframes flyAcross {
+  0% { left: -20%; transform: translateY(0) scale(1); opacity: 0; }
+  10% { opacity: 0.5; }
+  50% { transform: translateY(-50px) scale(1.1); opacity: 0.6; }
+  90% { opacity: 0.5; }
+  100% { left: 120%; transform: translateY(0) scale(1); opacity: 0; }
+}
+
+.ghost {
+  position: absolute; z-index: -1; pointer-events: none;
+  width: 120px; height: 150px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120'%3E%3Cpath d='M50,10 C30,10 20,30 20,50 L20,100 L25,95 L30,100 L35,95 L40,100 L45,95 L50,100 L55,95 L60,100 L65,95 L70,100 L75,95 L80,100 L80,50 C80,30 70,10 50,10 Z' fill='%23ffffff' opacity='0.15'/%3E%3Cellipse cx='40' cy='40' rx='4' ry='7' fill='%23000000' opacity='0.5'/%3E%3Cellipse cx='60' cy='40' rx='4' ry='7' fill='%23000000' opacity='0.5'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 0 15px rgba(255,255,255,0.4));
+  animation: floatGhost 12s infinite ease-in-out alternate;
+  opacity: 0;
+}
+.ghost-1 { top: 15%; left: 10%; animation-delay: 0s; }
+.ghost-2 { top: 40%; right: 15%; width: 180px; height: 220px; animation-delay: -5s; animation-duration: 16s; }
+.ghost-3 { top: 75%; left: 20%; width: 100px; height: 130px; animation-delay: -2s; animation-duration: 10s; }
+
+@keyframes floatGhost {
+  0% { transform: translateY(0) scale(1); opacity: 0.1; }
+  50% { opacity: 0.4; }
+  100% { transform: translateY(-100px) scale(1.1); opacity: 0; }
+}
+
+.bat {
+  position: absolute; z-index: -1; pointer-events: none;
+  width: 50px; height: 30px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 60'%3E%3Cpath d='M50,30 Q60,10 80,20 Q90,30 100,10 Q80,40 60,40 L50,50 L40,40 Q20,40 0,10 Q10,30 20,20 Q40,10 50,30 Z' fill='%23000000'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  animation: flyBat linear infinite;
+}
+.bat-1 { top: 10%; animation-duration: 25s; animation-delay: 0s; }
+.bat-2 { top: 35%; animation-duration: 35s; animation-delay: 5s; transform: scale(0.6); }
+.bat-3 { top: 60%; animation-duration: 20s; animation-delay: 12s; transform: scale(1.2); }
+.bat-4 { top: 85%; animation-duration: 40s; animation-delay: 2s; transform: scale(0.8); }
+
+@keyframes flyBat {
+  0% { left: -10%; transform: translateY(0) rotate(5deg); }
+  25% { transform: translateY(-30px) rotate(-10deg); }
+  50% { transform: translateY(20px) rotate(10deg); }
+  75% { transform: translateY(-20px) rotate(-5deg); }
+  100% { left: 110%; transform: translateY(0) rotate(5deg); }
+}
+
+.spider-bg {
+  position: absolute; z-index: -1; pointer-events: none;
+  width: 40px; height: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cellipse cx='50' cy='60' rx='15' ry='20' fill='%23000000'/%3E%3Cellipse cx='50' cy='40' rx='10' ry='10' fill='%23000000'/%3E%3Cpath d='M45,35 L20,15 M42,45 L10,40 M42,55 L10,70 M42,65 L20,90 M55,35 L80,15 M58,45 L90,40 M58,55 L90,70 M58,65 L80,90' stroke='%23000000' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  animation: crawlSpider 25s infinite linear;
+}
+
+.spider-1 { top: 20%; left: -5%; animation-duration: 30s; }
+.spider-2 { top: 50%; right: -5%; animation-duration: 40s; animation-direction: reverse; }
+.spider-3 { top: 80%; left: -5%; animation-duration: 25s; animation-delay: 5s; transform: scale(0.6); }
+.spider-4 { top: 10%; right: -5%; animation-duration: 35s; animation-delay: 15s; transform: scale(1.2); animation-direction: reverse; }
+
+@keyframes crawlSpider {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(25vw, 10vh) rotate(10deg); }
+  50% { transform: translate(50vw, -5vh) rotate(-5deg); }
+  75% { transform: translate(75vw, 15vh) rotate(5deg); }
+  100% { transform: translate(110vw, 0) rotate(0deg); }
+}
+
+/* ================= ОСНОВНОЙ КОНТЕНТ ================= */
+
+.grain{
+  position:fixed; inset:-50%; z-index:9998; pointer-events:none;
+  opacity:.06; mix-blend-mode:screen;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grainShift 7s steps(8) infinite;
+}
+@keyframes grainShift{
+  0%,100%{transform:translate(0,0)}
+  12%{transform:translate(-2%,-3%)}
+  25%{transform:translate(3%,-1%)}
+  37%{transform:translate(-1%,2%)}
+  50%{transform:translate(2%,3%)}
+  62%{transform:translate(-3%,1%)}
+  75%{transform:translate(1%,-2%)}
+  87%{transform:translate(-2%,2%)}
+}
+
+.vignette{
+  position:fixed; inset:0; z-index:9997; pointer-events:none;
+  background:radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,.85) 100%);
+}
+
+.hero{
+  position:relative;
+  min-height:100svh;
+  display:flex; align-items:center; justify-content:center;
+  text-align:center;
+  padding:80px 24px 120px;
+  overflow:hidden;
+  z-index:2;
+}
+
+.hero-inner{position:relative; z-index:2; max-width:900px;}
+
+.kicker{
+  font-family:"Courier New", monospace;
+  font-size:.8rem;
+  font-weight: bold;
+  letter-spacing:.42em;
+  text-transform:uppercase;
+  color:var(--ink-dim);
+  margin:0 0 28px;
+  text-shadow: 0 0 10px #000;
+}
+
+.hero h1{
+  font-size:clamp(2.5rem, 8vw, 5rem);
+  line-height:1.05;
+  margin:0;
+  font-weight:bold;
+  letter-spacing:.02em;
+  color:#ded9cc;
+  text-shadow:0 0 50px var(--accent-glow), 0 0 100px rgba(0,0,0,1);
+  animation:titlePulse 9s ease-in-out infinite;
+}
+@keyframes titlePulse{
+  0%,100%{text-shadow:0 0 40px rgba(255,34,34,.2), 0 0 90px rgba(0,0,0,1)}
+  50%{text-shadow:0 0 80px rgba(255,34,34,.8), 0 0 90px rgba(0,0,0,1)}
+}
+
+.hero .sub{
+  margin:34px 0 0;
+  font-size:.95rem;
+  letter-spacing:.34em;
+  text-transform:uppercase;
+  color:var(--accent);
+  font-weight:bold;
+  text-shadow:0 0 15px var(--accent-glow);
+  font-family:"Courier New", monospace;
+}
+
+.hero .lead{
+  max-width:560px;
+  margin:40px auto 0;
+  color:#a8a49a;
+  font-style:italic;
+  font-size:1.1rem;
+  text-shadow: 0 0 10px #000;
+}
+
+.scroll-hint{
+  display:block;
+  margin-top:70px;
+  color:var(--accent);
+  font-size:1.5rem;
+  text-decoration:none;
+  animation:bob 2.6s ease-in-out infinite;
+  position:relative; z-index:2;
+  text-shadow: 0 0 10px var(--accent-glow);
+}
+@keyframes bob{
+  0%,100%{transform:translateY(0); opacity:.5}
+  50%{transform:translateY(15px); opacity:1}
+}
+
+main{position:relative; z-index:10;}
+
+.wrap{
+  max-width:800px;
+  margin:0 auto;
+  padding:0 24px;
+}
+
+.section { padding: 40px 0; }
+
+.text-box {
+  background: rgba(5, 6, 8, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-left: 3px solid var(--accent);
+  padding: 40px;
+  border-radius: 4px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+  margin-bottom: 60px;
+}
+
+.num{
+  font-family:"Courier New", monospace;
+  font-size:.85rem;
+  font-weight:bold;
+  letter-spacing:.4em;
+  color:var(--accent);
+  text-shadow:0 0 10px var(--accent-glow);
+  display:block;
+  margin-bottom:18px;
+}
+
+h2{
+  font-size:clamp(1.6rem, 4vw, 2.2rem);
+  font-weight:bold;
+  line-height:1.25;
+  margin:0 0 34px;
+  color:#e8e3d6;
+  letter-spacing:.01em;
+}
+h2::after{
+  content:"";
+  display:block;
+  width:80px;
+  height:2px;
+  margin-top:22px;
+  background:linear-gradient(90deg, var(--accent), transparent);
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+
+p{margin:0 0 22px; color: #d1ccc0;}
+em{color:#fff; font-style:italic;}
+
+strong{
+  color:var(--accent);
+  font-weight:bold;
+  text-shadow: 0 0 10px var(--accent-glow);
+}
+
+blockquote{
+  margin:44px 0 0;
+  padding:26px 30px;
+  border-left:3px solid var(--accent);
+  background:linear-gradient(90deg, rgba(255,34,34,.15), transparent 80%);
+  font-style:italic;
+  color:#fff;
+  font-size: 1.1rem;
+}
+
+figure{margin:0;}
+.photo-block{margin:60px 0; position: relative;}
+
+.ph{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  aspect-ratio:16/9;
+  width:100%;
+  overflow:visible; 
+  background-color:#000;
+  background-position:center;
+  background-size:cover;
+  background-repeat:no-repeat;
+  color:var(--ink-dim);
+  text-align:center;
+  transition:border-color .6s ease, transform .8s ease, filter .6s ease;
+  filter:grayscale(.4) contrast(1.1) brightness(.8);
+  cursor: zoom-in; 
+  z-index: 5;
+}
+.ph::after{
+  content:"";
+  position:absolute; inset:0;
+  background:radial-gradient(ellipse at 50% 50%, transparent 30%, rgba(0,0,0,.8) 100%);
+  pointer-events:none;
+  z-index:1;
+}
+.ph:hover{
+  filter:grayscale(0) contrast(1.1) brightness(1);
+  transform:scale(1.02);
+}
+
+.ph::before, .ph .tape-2 {
+  content: '';
+  position: absolute;
+  width: 90px;
+  height: 35px;
+  background: rgba(200, 180, 140, 0.75);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5), inset 0 0 10px rgba(255,255,255,0.2);
+  backdrop-filter: blur(1px);
+  z-index: 10;
+  clip-path: polygon(2% 5%, 98% 0%, 100% 95%, 0% 100%);
+  border-left: 1px solid rgba(255,255,255,0.1);
+  border-right: 1px solid rgba(0,0,0,0.1);
+}
+.ph::before {
+  top: -15px;
+  left: -25px;
+  transform: rotate(-35deg);
+}
+.ph .tape-2 {
+  bottom: -15px;
+  right: -25px;
+  transform: rotate(-35deg);
+  top: auto;
+  left: auto;
+}
+
+.ph.portrait .tape-2 { bottom: -15px; right: -15px; }
+.ph.portrait::before { left: -15px; }
+
+.ph-caption{
+  position:absolute;
+  bottom:0; left:0; right:0;
+  z-index:2;
+  padding:40px 20px 20px;
+  background:linear-gradient(0deg, rgba(0,0,0,.95), transparent);
+  font-family:"Courier New", monospace;
+  letter-spacing:.22em;
+  font-size:.75rem;
+  font-weight:bold;
+  text-transform:uppercase;
+  color:#fff;
+  pointer-events: none; 
+}
+
+.ph.portrait{
+  aspect-ratio:4/5;
+  max-width:420px;
+  margin:0 auto;
+}
+
+.gallery{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:22px;
+  margin:60px 0;
+}
+.gallery .ph {
+  aspect-ratio:1/1;
+  border: 1px solid rgba(255,255,255,.1); 
+}
+.gallery .ph-caption{
+  font-size:.68rem; 
+  padding:30px 10px 15px;
+}
+.gallery .ph::before, 
+.gallery .ph .tape-2 {
+  display: none; 
+}
+
+@media (max-width:900px){
+  .gallery{grid-template-columns:repeat(2, 1fr);}
+  .text-box { padding: 30px 20px; }
+  .ph::before, .ph .tape-2 { width: 60px; height: 25px; }
+  .ph::before { top: -10px; left: -15px; }
+  .ph .tape-2 { bottom: -10px; right: -15px; }
+}
+@media (max-width:640px){
+  .gallery{grid-template-columns:1fr;}
+  .moon { width: 100px; height: 100px; right: 5%; }
+}
+
+figcaption{
+  margin-top:20px;
+  font-size:.8rem;
+  color:#888;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  font-family:"Courier New", monospace;
+  text-align:center;
+}
+
+.warning{
+  position:relative;
+  margin:60px 0 0;
+  padding:60px 34px;
+  text-align:center;
+  border: 1px solid var(--accent-soft);
+  background:rgba(20, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  border-radius: 4px;
+  box-shadow: 0 0 50px rgba(255,34,34,0.15);
+}
+.warning p{
+  font-size:clamp(1.1rem, 2.4vw, 1.4rem);
+  font-style:italic;
+  color:#d8d3c6;
+  max-width:620px;
+  margin:0 auto 18px;
+  line-height:1.7;
+}
+.warning .final-line{
+  font-style:normal;
+  font-weight: bold;
+  letter-spacing:.02em;
+  color:#fff;
+  font-size:clamp(1.2rem, 3vw, 1.8rem);
+  margin-top:34px;
+  text-shadow:0 0 30px var(--accent-glow);
+}
+
+/* ================= БЛОК ОПРОСА ================= */
+.poll-section {
+  margin: 40px 0;
+}
+.poll-box {
+  background: rgba(10, 5, 5, 0.9);
+  border: 1px solid rgba(255, 34, 34, 0.2);
+  border-radius: 4px;
+  padding: 40px 20px;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 40px rgba(255,34,34,0.05);
+}
+.poll-box h3 {
+  color: #ded9cc;
+  font-size: 1.3rem;
+  margin: 0 0 30px;
+  font-weight: normal;
+  letter-spacing: 0.05em;
+}
+.poll-options {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+.poll-btn {
+  background: transparent;
+  border: 1px solid var(--accent-soft);
+  color: var(--ink);
+  font-family: "Courier New", monospace;
+  font-size: 0.95rem;
+  padding: 14px 40px;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-weight: bold;
+  position: relative;
+  overflow: hidden;
+}
+.poll-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,34,34,0.2), transparent);
+  transition: left 0.5s ease;
+}
+.poll-btn:hover::before {
+  left: 100%;
+}
+.poll-btn:hover {
+  background: rgba(255, 34, 34, 0.1);
+  color: #fff;
+  box-shadow: 0 0 20px var(--accent-glow);
+  border-color: var(--accent);
+  text-shadow: 0 0 8px var(--accent-glow);
+}
+.poll-result {
+  margin-top: 20px;
+  color: var(--accent);
+  font-weight: bold;
+  font-style: italic;
+  font-size: 1.1rem;
+  text-shadow: 0 0 10px var(--accent-glow);
+  display: none;
+  animation: fadeInResult 1s forwards;
+}
+@keyframes fadeInResult {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ================= ССЫЛКА НА КАНАЛ ================= */
+.easter-egg {
+  text-align:center;
+  padding: 20px 20px 40px;
+  position:relative;
+  z-index: 10;
+}
+.yt-link {
+  display:inline-flex;
+  flex-direction:column;
+  align-items:center;
+  text-decoration:none;
+  color: #a8a49a;
+  font-family:"Courier New", monospace;
+  font-size: 0.9rem;
+  font-weight: bold;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  transition: color 0.5s ease;
+}
+.yt-link:hover { color: #ffffff; }
+.spider-icon {
+  width: 80px; height: 80px;
+  margin-bottom: 20px;
+  transition: transform 0.5s ease, filter 0.5s ease;
+}
+.yt-link:hover .spider-icon {
+  transform: scale(1.2) rotate(10deg);
+  filter: drop-shadow(0 0 20px var(--accent));
+}
+
+footer{
+  padding:20px 24px 40px;
+  text-align:center;
+  color:#666;
+  font-family:"Courier New", monospace;
+  font-size:.75rem;
+  font-weight: bold;
+  letter-spacing:.3em;
+  text-transform:uppercase;
+  position:relative;
+  z-index:10;
+}
+footer span{color:var(--accent); text-shadow: 0 0 10px var(--accent-glow);}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.95);
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  transform: scale(0.95);
+  cursor: zoom-out;
+  backdrop-filter: blur(10px);
+}
+.lightbox.active {
+  opacity: 1;
+  pointer-events: all;
+  transform: scale(1);
+}
+
+.reveal{
+  opacity:0;
+  transform:translateY(40px);
+  transition:opacity 1.3s ease, transform 1.3s cubic-bezier(.22,.61,.36,1);
+  will-change:opacity, transform;
+}
+.reveal.visible{opacity:1; transform:none;}
+
+@media (prefers-reduced-motion: reduce){
+  .reveal{opacity:1; transform:none; transition:none;}
+  .ghost, .bat, .spider-bg, .flying-ghost, .pentagram {animation:none !important;}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= ХОРРОР ФОН ================= -->
+<div class="sky"></div>
+<div class="moon"></div>
+<div class="forest-edge"></div>
+<div class="boot-prints"></div>
+
+<div class="pentagram pent-1"></div>
+<div class="pentagram pent-2"></div>
+
+<div class="flying-ghost fly-1"></div>
+<div class="flying-ghost fly-2"></div>
+<div class="flying-ghost fly-3"></div>
+
+<div class="ghost ghost-1"></div>
+<div class="ghost ghost-2"></div>
+<div class="ghost ghost-3"></div>
+
+<div class="bat bat-1"></div>
+<div class="bat bat-2"></div>
+<div class="bat bat-3"></div>
+<div class="bat bat-4"></div>
+
+<div class="spider-bg spider-1"></div>
+<div class="spider-bg spider-2"></div>
+<div class="spider-bg spider-3"></div>
+<div class="spider-bg spider-4"></div>
+
+<div class="fog-layer"></div>
+<div class="graveyard"></div>
+
+<div class="grain"></div>
+<div class="vignette"></div>
+
+<div class="lightbox" id="lightbox"></div>
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="kicker">Ленинградская область · локальная легенда</p>
+    <h1>Тайна заброшенной ГЭС</h1>
+    <p class="sub">Нижнеоредежская ГЭС · осень 1967</p>
+    <p class="lead">История, которую в интернете вы не найдёте.<br>Её рассказывают только шёпотом.</p>
+    <a class="scroll-hint" href="#start" aria-label="Листать вниз">↓</a>
+  </div>
+</header>
+
+<main>
+
+<section class="section" id="start">
+  <div class="wrap">
+    <div class="text-box reveal">
+      <span class="num">01 — ПРОЛОГ</span>
+      <h2>Место, о котором молчат</h2>
+      <p>Сегодня поговорим про одно из самых мрачных мест в Ленинградской области, о котором в сети почти нет информации. О раскрученных заброшках знают все, а вот об этой — почему-то молчат.</p>
+      <p>Эту байку мне в детстве рассказала бабушка из деревни Крёмно, которая находится неподалёку. А ей — местный мужик, который там работал и всё видел своими глазами. Настоящая народная легенда, передававшаяся шёпотом. И я решила, что об этом пора рассказать всем, потому что такие истории забывать нельзя.</p>
+      <blockquote>Так что усаживайтесь поудобнее, выключайте свет. Мы начинаем.</blockquote>
+    </div>
+
+    <figure class="photo-block reveal">
+      <div class="ph filled" style="background-image:url('img/ges-outside.jpg')">
+        <div class="tape-2"></div>
+        <span class="ph-caption">Фото · ГЭС снаружи</span>
+      </div>
+      <figcaption>Бетонная коробка посреди леса. Днём — просто руина. Ночью — что-то другое.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="text-box reveal">
+      <span class="num">02 — ЧАСТЬ ПЕРВАЯ</span>
+      <h2>Странности в ночную смену</h2>
+      <p>Жил на этой станции ночной электрик — Евгений Фишер. Тихий, спокойный, семейный мужик. Жена, маленькая дочка, никаких долгов и проблем. Обычная рабочая жизнь.</p>
+      <p>Но осенью 67-го его начала мучить страшная бессонница. А на дежурствах он начал замечать, что из густого тёмного леса за окном на него кто-то пристально смотрит. Он чувствовал этот взгляд физически.</p>
+      <p>Сначала он поделился с напарниками. Те посмеялись, мол, ночь, глушь, шум воды — всякое причудится. Взяли фонари, обошли кусты, посветили в темноту. Никого. Обычный лес и лес.</p>
+    </div>
+
+    <figure class="photo-block reveal">
+      <div class="ph filled portrait" style="background-image:url('img/fischer.jpg')">
+        <div class="tape-2"></div>
+        <span class="ph-caption">Фото · Евгений Александрович Фишер</span>
+      </div>
+      <figcaption>Ночной электрик. Жена. Маленькая дочка. Никаких долгов, никаких ссор.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="text-box reveal">
+      <span class="num">03 — ЧАСТЬ ВТОРАЯ</span>
+      <h2>Нарастание безумия</h2>
+      <p>Но Жене легче не становилось. Спустя месяц к ощущению взгляда добавились звуки. Сквозь грохот воды и гул турбин он отчётливо слышал треск веток, чей-то шёпот и будто его звали по имени.</p>
+      <p>Он начал вести себя всё страннее.</p>
+      <p>Во время смены он выходил на площадку плотины и просто замирал, глядя в одну точку в темноте. Сначала стоял так по пять минут, потом по десять. А иногда мог простоять полчаса без движения, не мигая, будто ведя безмолвный диалог с кем-то невидимым в чаще.</p>
+      <p>Коллег это перестало смешить и начало откровенно пугать. Смотреть полчаса в пустоту и шептать, что там кто-то есть — так и до беды недалеко. Они доложили руководству, что мужик срывается от переутомления. Начальство взглянуло на его дёрганый вид и отправило в отпуск: <em>«Иди, Женя, отдохни, поспи, побудь с семьёй»</em>.</p>
+    </div>
+
+    <figure class="photo-block reveal">
+      <div class="ph filled" style="background-image:url('img/inside-hall.jpg')">
+        <div class="tape-2"></div>
+        <span class="ph-caption">Фото · Машинный зал внутри</span>
+      </div>
+      <figcaption>Пустые залы, решётки на окнах, гул воды. Здесь он сидел ночами и слушал.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="text-box reveal">
+      <span class="num">04 — ЧАСТЬ ТРЕТЬЯ</span>
+      <h2>Трагическая развязка</h2>
+      <p>Но неделя дома не помогла. Он так и не спал, всё время смотрел в окно в сторону реки и леса.</p>
+      <p>На седьмой день отпуска, глухой ночью, Женя молча встал, оделся и ушёл на ГЭС. Никто не понял, зачем. Он просто пришёл на объект и начал там бродить.</p>
+      <p>Около полуночи его заметили коллеги, вышедшие покурить. В темноте стоял силуэт — это был Женя.</p>
+      <p>Он перелез через защитное ограждение и стоял на самом краю водосброса, прямо над ревущим потоком воды. И снова просто смотрел в лес на противоположном берегу.</p>
+      <p>Мужики закричали: <em>«Женя, стой! Назад!»</em> — и рванули к нему.</p>
+      <p>Но услышав их шаги, он даже не обернулся. Просто медленно опустил руки и шагнул вперёд... вниз, в эту кипящую бездну.</p>
+      <p>Спасти не удалось. Падение с шестиметровой высоты на камни в бешеный поток...</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="text-box reveal">
+      <span class="num">05 — ЭПИЛОГ</span>
+      <h2>То, что осталось в лесу</h2>
+      <p>У него остались жена и дочь. Милиция перерыла всё: никаких долгов, ссор или предсмертных записок. Абсолютно благополучный человек.</p>
+      <p>Но что-то в том лесу за четыре месяца забрало его разум. Что-то, что наблюдало за ним по ночам из крон деревьев, пока не заставило прийти и сделать этот шаг.</p>
+      <p>Бабушка говорила, что после этого случая местные вообще перестали ходить мимо ГЭС после заката. А старики в Крёмно до сих пор верят: то, что жило в лесу и звало Женю, никуда не ушло.</p>
+    </div>
+
+    <figure class="photo-block reveal">
+      <div class="ph filled" style="background-image:url('img/forest-bank.jpg')">
+        <div class="tape-2"></div>
+        <span class="ph-caption">Фото · Лес на том берегу</span>
+      </div>
+      <figcaption>Тот самый берег. Те самые кроны.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="text-box reveal">
+      <span class="num">06 — МЕСТО</span>
+      <h2>Кадры, которые лучше смотреть днём</h2>
+      
+      <div class="gallery">
+        <div class="ph filled" style="background-image:url('img/gallery-1.jpg')">
+          <span class="ph-caption">Фото · Общий вид</span>
+        </div>
+        <div class="ph filled" style="background-image:url('img/gallery-2.jpg')">
+          <span class="ph-caption">Фото · Окна с решётками</span>
+        </div>
+        <div class="ph filled" style="background-image:url('img/gallery-3.jpg')">
+          <span class="ph-caption">Фото · Река Оредеж</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="warning reveal">
+      <p>Так что если поедете на заброшенную Нижнеоредежскую ГЭС — пофоткаться или просто посмотреть — и задержитесь до темноты...</p>
+      <p>Настоятельный совет: никогда, слышите, <strong>никогда</strong> не всматривайтесь долго в деревья на том берегу.</p>
+      <p class="final-line">Потому что если вы долго смотрите в лес —<br>лес начинает смотреть в вас.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ОПРОС (ИСПРАВЛЕНО) ================= -->
+<section class="poll-section">
+  <div class="wrap">
+    <div class="poll-box reveal">
+      <h3>А вы бы поверили в эту историю?</h3>
+      <div class="poll-options" id="poll-options">
+        <button class="poll-btn" onclick="vote('yes')">Верю</button>
+        <button class="poll-btn" onclick="vote('no')">Не верю</button>
+      </div>
+      <div class="poll-result" id="poll-result">
+        <span id="poll-message"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ССЫЛКА НА КАНАЛ ================= -->
+<div class="easter-egg reveal">
+  <a href="https://www.youtube.com/@Arana.officialakk" target="_blank" rel="noopener noreferrer" class="yt-link">
+    
+    <svg class="spider-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="50" cy="65" rx="12" ry="16" fill="#ffffff"/>
+      <ellipse cx="50" cy="45" rx="9" ry="9" fill="#ffffff"/>
+      <path d="M 43,42 Q 25,30 15,45" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M 41,55 Q 20,55 10,75" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M 41,68 Q 25,80 20,95" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M 57,42 Q 75,30 85,45" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M 59,55 Q 80,55 90,75" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M 59,68 Q 75,80 80,95" stroke="#ffffff" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </svg>
+
+    <span>YouTube: ARANA</span>
+  </a>
+</div>
+
+</main>
+
+<footer>
+  Тайна заброшенной ГЭС <span>·</span> легенда деревни Крёмно
+</footer>
+
+<script>
+// Анимация появления
+(function(){
+  const items = document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)){
+    items.forEach(el => el.classList.add('visible'));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  items.forEach(el => io.observe(el));
+})();
+
+// Лайтбокс
+document.addEventListener('DOMContentLoaded', () => {
+  const photos = document.querySelectorAll('.ph.filled');
+  const lightbox = document.getElementById('lightbox');
+
+  photos.forEach(photo => {
+    photo.addEventListener('click', () => {
+      const bgImage = photo.style.backgroundImage;
+      if(bgImage) {
+        lightbox.style.backgroundImage = bgImage;
+        lightbox.classList.add('active');
+      }
+    });
+  });
+
+  lightbox.addEventListener('click', () => {
+    lightbox.classList.remove('active');
+  });
+  
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape') {
+      lightbox.classList.remove('active');
+    }
+  });
+});
+
+// Логика голосования
+function vote(choice) {
+  const options = document.getElementById('poll-options');
+  const result = document.getElementById('poll-result');
+  const message = document.getElementById('poll-message');
+  
+  options.style.display = 'none';
+  result.style.display = 'block';
+  
+  if (choice === 'yes') {
+    message.innerText = "Смельчак. Но теперь лес знает, что ты знаешь.";
+  } else {
+    message.innerText = "Скептик. Скептики живут дольше. Но в этой истории это не точно.";
+  }
+}
+</script>
+
+</body>
+</html>
